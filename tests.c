@@ -75,7 +75,9 @@ START_TEST(test_minmea_check)
 {
     for (const char **sentence=valid_sentences_nochecksum; *sentence; sentence++) {
         ck_assert_msg(minmea_check(*sentence, false) == true, *sentence);
-        ck_assert_msg(minmea_check(*sentence, true) == false, *sentence);
+        char buf[999];
+        sprintf(buf, "%s == %d", *sentence, minmea_check(*sentence, true));
+        ck_assert_msg(minmea_check(*sentence, true) == false, buf);
     }
 
     for (const char **sentence=valid_sentences_checksum; *sentence; sentence++) {
