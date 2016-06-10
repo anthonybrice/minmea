@@ -70,7 +70,7 @@ bool minmea_check(const char *sentence, bool strict)
             return false;
         int expected = upper << 4 | lower;
 
-        // Check for checksum mismatch.
+r        // Check for checksum mismatch.
         if (checksum != expected)
             return false;
     } else if (strict) {
@@ -399,8 +399,7 @@ bool minmea_parse_grs(struct minmea_sentence_grs *frame, const char *sentence)
             &frame->residuals[8],
             &frame->residuals[9],
             &frame->residuals[10],
-            &frame->residuals[11],
-            &frame->residuals[12]))
+            &frame->residuals[11]))
         return false;
     if (strcmp(type+2, "GRS"))
         return false;
