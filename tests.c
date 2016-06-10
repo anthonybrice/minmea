@@ -76,7 +76,7 @@ START_TEST(test_minmea_check)
 {
     for (const char **sentence=valid_sentences_nochecksum; *sentence; sentence++) {
         ck_assert_msg(minmea_check(*sentence, false) == true, *sentence);
-        ck_assert_msg(minmea_check(*sentence, true) == false, buf);
+        ck_assert_msg(minmea_check(*sentence, true) == false, *sentence);
     }
 
     for (const char **sentence=valid_sentences_checksum; *sentence; sentence++) {
@@ -865,6 +865,33 @@ START_TEST(test_minmea_parse_vtg2)
 }
 END_TEST
 
+START_TEST(test_minmea_parse_grs)
+{
+    const char* sentence = "$GPGRS,082632.00,1,0.54,0.83,1.00,1.02,-2.12,2.64,-0.71,-1.18,0.25,,,*70";
+    struct minmea_sentence_grs frame = {};
+    static struct minmea_sentence_grs expected = {
+        .time = { 8, 26, 32, 0 },
+        .mode = '1',
+        .residuals = {
+            { 54, 100 },
+            { 83, 200 },
+            { 1, 1 },
+            { 102, 100 },
+            { -212, 100 },
+            { 264, 100 },
+            { -71, 100 },
+            { -118, 100 },
+            { 25, 100 }
+        }
+    };
+
+    ck_assert(minmea_check(sentence, false) == true);
+    ck_assert(minmea_check(sentence, true) == true);
+    ck_assert(minmea_parse_grs(&frame, sentence) == true);
+    ck_assert(!memcmp(&frame, &expected, sizeof(frame)));
+}
+END_TEST
+
 START_TEST(test_minmea_usage1)
 {
     const char *sentences[] = {
@@ -1021,6 +1048,7 @@ static Suite *minmea_suite(void)
     tcase_add_test(tc_parse, test_minmea_parse_gsv5);
     tcase_add_test(tc_parse, test_minmea_parse_vtg1);
     tcase_add_test(tc_parse, test_minmea_parse_vtg2);
+    tcase_add_test(tc_parse, test_minmea_parse_grs);
     suite_add_tcase(s, tc_parse);
 
     TCase *tc_usage = tcase_create("minmea_usage");

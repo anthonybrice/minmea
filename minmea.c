@@ -70,7 +70,7 @@ bool minmea_check(const char *sentence, bool strict)
             return false;
         int expected = upper << 4 | lower;
 
-r        // Check for checksum mismatch.
+        // Check for checksum mismatch.
         if (checksum != expected)
             return false;
     } else if (strict) {
