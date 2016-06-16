@@ -372,8 +372,39 @@ enum minmea_sentence_id minmea_sentence_id(const char *sentence, bool strict)
         return MINMEA_SENTENCE_GSV;
     if (!strcmp(type+2, "VTG"))
         return MINMEA_SENTENCE_VTG;
+    if (!strcmp(type+2, "GRS"))
+        return MINMEA_SENTENCE_GRS;
 
     return MINMEA_UNKNOWN;
+}
+
+bool minmea_parse_grs(struct minmea_sentence_grs *frame, const char *sentence)
+{
+    // $GPGRS,hhmmss.ss, mode {,residual}*cs<CR><LF>
+    // $GPGRS,082632.00,1,0.54,0.83,1.00,1.02,-2.12,2.64,-0.71,-1.18,0.25,,,*70
+    char type[6];
+
+    if (!minmea_scan(sentence, "tTcffffffffffff",
+            type,
+            &frame->time,
+            &frame->mode,
+            &frame->residuals[0],
+            &frame->residuals[1],
+            &frame->residuals[2],
+            &frame->residuals[3],
+            &frame->residuals[4],
+            &frame->residuals[5],
+            &frame->residuals[6],
+            &frame->residuals[7],
+            &frame->residuals[8],
+            &frame->residuals[9],
+            &frame->residuals[10],
+            &frame->residuals[11]))
+        return false;
+    if (strcmp(type+2, "GRS"))
+        return false;
+
+    return true;
 }
 
 bool minmea_parse_rmc(struct minmea_sentence_rmc *frame, const char *sentence)

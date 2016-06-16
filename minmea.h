@@ -9,9 +9,9 @@
 #ifndef MINMEA_H
 #define MINMEA_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/* #ifdef __cplusplus */
+/* extern "C" { */
+/* #endif */
 
 #include <stdio.h>
 #include <stdint.h>
@@ -32,6 +32,7 @@ enum minmea_sentence_id {
     MINMEA_SENTENCE_GST,
     MINMEA_SENTENCE_GSV,
     MINMEA_SENTENCE_VTG,
+    MINMEA_SENTENCE_GRS
 };
 
 struct minmea_float {
@@ -152,6 +153,12 @@ struct minmea_sentence_vtg {
     enum minmea_faa_mode faa_mode;
 };
 
+struct minmea_sentence_grs {
+    struct minmea_time time;
+    char mode;
+    struct minmea_float residuals[12];
+};
+
 /**
  * Calculate raw sentence checksum. Does not check sentence integrity.
  */
@@ -195,6 +202,7 @@ bool minmea_parse_gll(struct minmea_sentence_gll *frame, const char *sentence);
 bool minmea_parse_gst(struct minmea_sentence_gst *frame, const char *sentence);
 bool minmea_parse_gsv(struct minmea_sentence_gsv *frame, const char *sentence);
 bool minmea_parse_vtg(struct minmea_sentence_vtg *frame, const char *sentence);
+bool minmea_parse_grs(struct minmea_sentence_grs *frame, const char *sentence);
 
 /**
  * Convert GPS UTC date/time representation to a UNIX timestamp.
@@ -240,9 +248,9 @@ static inline float minmea_tocoord(struct minmea_float *f)
     return (float) degrees + (float) minutes / (60 * f->scale);
 }
 
-#ifdef __cplusplus
-}
-#endif
+/* #ifdef __cplusplus */
+/* } */
+/* #endif */
 
 #endif /* MINMEA_H */
 
