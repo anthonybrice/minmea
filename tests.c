@@ -923,7 +923,6 @@ START_TEST(test_minmea_parse_grs2)
 }
 END_TEST
 
-
 START_TEST(test_minmea_usage1)
 {
     const char *sentences[] = {
@@ -1080,6 +1079,7 @@ static Suite *minmea_suite(void)
     tcase_add_test(tc_parse, test_minmea_parse_gsv5);
     tcase_add_test(tc_parse, test_minmea_parse_vtg1);
     tcase_add_test(tc_parse, test_minmea_parse_vtg2);
+
     tcase_add_test(tc_parse, test_minmea_parse_grs1);
     tcase_add_test(tc_parse, test_minmea_parse_grs2);
     suite_add_tcase(s, tc_parse);
